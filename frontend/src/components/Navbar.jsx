@@ -4,6 +4,7 @@ import {
   LoaderCircle,
   LogOut,
   Menu,
+  RefreshCw,
   Upload,
   UserRound,
   X,
@@ -19,7 +20,7 @@ const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef(null);
   const mobileMenuRef = useRef(null);
-  const { isLogin, userData, userDataLoading, fetchUserData, setIsLogin } =
+  const { isLogin, userData, userDataLoading, fetchUserData, setIsLogin, userRole, toggleUserRole } =
     useContext(AppContext);
   const location = useLocation();
 
@@ -28,6 +29,7 @@ const Navbar = () => {
   const menu = [
     { name: "Home", path: "/" },
     { name: "All Jobs", path: "/all-jobs/all" },
+    { name: "Messages", path: "/messages" },
     { name: "About", path: "/about" },
     { name: "Terms", path: "/terms" },
   ];
@@ -79,24 +81,25 @@ const Navbar = () => {
   }, [location.pathname]);
 
   return (
-    <header className="border-b border-gray-200 mb-10">
-      <nav>
-        <div className="h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center">
-            <img className="w-[120px]" src={assets.logo} alt="Lecruiter Logo" />
-          </Link>
+    <header className="border-b border-gray-200 mb-10 shadow-md bg-gradient-to-r from-blue-50 to-indigo-50">
+      <nav className="container mx-auto px-4">
+        <div className="h-20 flex items-center justify-between">
+         <Link to="/" className="flex items-center">
+  <span className="text-2xl font-bold text-blue-600">Campus Connect</span>
+</Link>
+
 
           {/* Desktop Navigation */}
-          <ul className="hidden lg:flex items-center gap-4">
+          <ul className="hidden lg:flex items-center gap-6">
             {menu.map((item) => (
               <li key={item.path}>
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>
-                    `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    `px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive
-                        ? "text-blue-600 bg-blue-50"
-                        : "text-gray-600 hover:text-blue-500 hover:bg-blue-50"
+                        ? "text-blue-600 bg-blue-100 shadow-sm"
+                        : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
                     }`
                   }
                 >
@@ -108,7 +111,7 @@ const Navbar = () => {
 
           {/* Desktop Buttons */}
           {userDataLoading ? (
-            <LoaderCircle className="animate-spin text-gray-600 hidden lg:block" />
+            <LoaderCircle className="animate-spin text-blue-600 hidden lg:block" />
           ) : isLogin ? (
             <div
               className="hidden lg:flex items-center gap-4 relative"
@@ -116,14 +119,14 @@ const Navbar = () => {
             >
               <button
                 onClick={toggleProfileMenu}
-                className="flex items-center gap-2 focus:outline-none"
+                className="flex items-center gap-2 focus:outline-none bg-white px-3 py-2 rounded-full shadow-sm border border-gray-100 hover:shadow-md transition-all"
                 aria-expanded={isProfileMenuOpen}
               >
                 <span className="text-sm font-medium text-gray-700">
                   Hi, {userData?.name || "User"}
                 </span>
                 <img
-                  className="w-8 h-8 rounded-full object-cover"
+                  className="w-8 h-8 rounded-full object-cover border-2 border-blue-100"
                   src={userData?.image || assets.avatarPlaceholder}
                   alt="User profile"
                   onError={(e) => {
@@ -132,7 +135,7 @@ const Navbar = () => {
                 />
                 <ChevronDown
                   size={16}
-                  className={`transition-transform ${
+                  className={`transition-transform text-blue-500 ${
                     isProfileMenuOpen ? "rotate-180" : ""
                   }`}
                 />
@@ -148,6 +151,14 @@ const Navbar = () => {
                       <Briefcase size={16} />
                       Applied Jobs
                     </Link>
+                    
+                    <button
+                      className="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 gap-2"
+                      onClick={toggleUserRole}
+                    >
+                      <RefreshCw size={16} />
+                      Switch to {userRole === "seeker" ? "Talent Finder" : "Talent Seeker"}
+                    </button>
 
                     <button
                       className="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 gap-2"
@@ -161,16 +172,16 @@ const Navbar = () => {
               )}
             </div>
           ) : (
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-4">
               <Link
                 to="/recruiter-login"
-                className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-blue-100 transition-colors"
+                className="bg-white text-blue-600 px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-50 transition-all shadow-sm border border-blue-100 hover:shadow"
               >
                 Recruiter Login
               </Link>
               <Link
                 to="/candidate-login"
-                className="bg-blue-600 text-white px-3 py-1.5 rounded-md text-sm  hover:bg-blue-700 transition-colors font-medium"
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:from-blue-700 hover:to-indigo-700 transition-all font-medium shadow-md hover:shadow-lg"
               >
                 Login
               </Link>
@@ -196,15 +207,15 @@ const Navbar = () => {
         }`}
         ref={mobileMenuRef}
       >
-        <div className="fixed inset-0 backdrop-blur-sm" onClick={toggleMenu} />
-        <div className="relative flex flex-col w-4/5 max-w-sm h-full bg-white border-r border-r-gray-200">
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="fixed inset-0 backdrop-blur-sm bg-blue-900/20" onClick={toggleMenu} />
+        <div className="relative flex flex-col w-4/5 max-w-sm h-full bg-white border-r border-r-gray-200 shadow-xl">
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
             <Link to="/" onClick={toggleMenu}>
-              <img className="h-8" src={assets.logo} alt="Lecruiter Logo" />
+              <img className="h-10" src={assets.logo} alt="Campus Connect Logo" />
             </Link>
             <button
               onClick={toggleMenu}
-              className="p-2 rounded-md text-gray-500 hover:bg-gray-100"
+              className="p-2 rounded-full text-blue-600 hover:bg-white/80 transition-colors"
               aria-label="Close menu"
             >
               <X size={20} />
@@ -219,10 +230,10 @@ const Navbar = () => {
                     to={item.path}
                     onClick={toggleMenu}
                     className={({ isActive }) =>
-                      `block px-3 py-2 rounded-md text-sm font-medium ${
+                      `block px-4 py-3 rounded-md text-sm font-medium ${
                         isActive
-                          ? "bg-blue-50 text-blue-600"
-                          : "text-gray-700 hover:bg-gray-100"
+                          ? "bg-blue-100 text-blue-600 shadow-sm"
+                          : "text-gray-700 hover:bg-blue-50"
                       }`
                     }
                   >
@@ -255,13 +266,25 @@ const Navbar = () => {
                 <ul className="space-y-1">
                   <li>
                     <Link
-                      to="/applied-jobs"
+                      to="/applications"
                       onClick={toggleMenu}
                       className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
                     >
                       <Briefcase size={16} />
                       Applied Jobs
                     </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        toggleUserRole();
+                        toggleMenu();
+                      }}
+                      className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 cursor-pointer"
+                    >
+                      <RefreshCw size={16} />
+                      Switch to {userRole === "seeker" ? "Talent Finder" : "Talent Seeker"}
+                    </button>
                   </li>
                   <li>
                     <button

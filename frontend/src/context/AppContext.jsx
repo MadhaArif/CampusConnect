@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { generateMockUserProfile } from "../utils/matchScoreCalculator";
 
 export const AppContext = createContext();
 
@@ -18,6 +19,10 @@ export const AppContextProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(!!userToken);
   const [userApplication, setUserApplication] = useState(null);
   const [applicationsLoading, setApplicationsLoading] = useState(false);
+  
+  // Role switching functionality
+  const [userRole, setUserRole] = useState(localStorage.getItem("userRole") || "seeker");
+  const [userProfile, setUserProfile] = useState(generateMockUserProfile());
 
   const [companyToken, setCompanyToken] = useState(
     localStorage.getItem("companyToken")
@@ -41,6 +46,17 @@ export const AppContextProvider = ({ children }) => {
       localStorage.removeItem("companyToken");
     }
   }, [companyToken]);
+  
+  // Save user role to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem("userRole", userRole);
+  }, [userRole]);
+  
+  // Function to toggle between Talent Finder and Talent Seeker roles
+  const toggleUserRole = () => {
+    setUserRole(prevRole => prevRole === "seeker" ? "finder" : "seeker");
+    toast.success(`Switched to ${userRole === "seeker" ? "Talent Finder" : "Talent Seeker"} mode`);
+  };
 
   const fetchUserData = async () => {
     if (!userToken) return;
@@ -193,8 +209,13 @@ export const AppContextProvider = ({ children }) => {
     companyLoading,
     userApplication,
     applicationsLoading,
-    fetchUserApplication
+    fetchUserApplication,
+    
+    // Role switching
+    userRole,
+    setUserRole,
+    toggleUserRole
   };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return <AppContext.Provider value={{...value, userProfile, setUserProfile}}>{children}</AppContext.Provider>;
 };
