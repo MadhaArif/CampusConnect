@@ -4,7 +4,6 @@ import {
   LoaderCircle,
   LogOut,
   Menu,
-  RefreshCw,
   Upload,
   UserRound,
   X,
@@ -20,7 +19,7 @@ const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef(null);
   const mobileMenuRef = useRef(null);
-  const { isLogin, userData, userDataLoading, fetchUserData, setIsLogin, userRole, toggleUserRole } =
+  const { isLogin, userData, userDataLoading, fetchUserData, setIsLogin } =
     useContext(AppContext);
   const location = useLocation();
 
@@ -29,7 +28,6 @@ const Navbar = () => {
   const menu = [
     { name: "Home", path: "/" },
     { name: "All Jobs", path: "/all-jobs/all" },
-    { name: "Messages", path: "/messages" },
     { name: "About", path: "/about" },
     { name: "Terms", path: "/terms" },
   ];
@@ -151,14 +149,6 @@ const Navbar = () => {
                       <Briefcase size={16} />
                       Applied Jobs
                     </Link>
-                    
-                    <button
-                      className="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 gap-2"
-                      onClick={toggleUserRole}
-                    >
-                      <RefreshCw size={16} />
-                      Switch to {userRole === "seeker" ? "Talent Finder" : "Talent Seeker"}
-                    </button>
 
                     <button
                       className="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 gap-2"
@@ -266,25 +256,13 @@ const Navbar = () => {
                 <ul className="space-y-1">
                   <li>
                     <Link
-                      to="/applications"
+                      to="/applied-jobs"
                       onClick={toggleMenu}
                       className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
                     >
                       <Briefcase size={16} />
                       Applied Jobs
                     </Link>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        toggleUserRole();
-                        toggleMenu();
-                      }}
-                      className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 cursor-pointer"
-                    >
-                      <RefreshCw size={16} />
-                      Switch to {userRole === "seeker" ? "Talent Finder" : "Talent Seeker"}
-                    </button>
                   </li>
                   <li>
                     <button

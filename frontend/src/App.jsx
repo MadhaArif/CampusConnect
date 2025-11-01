@@ -16,12 +16,9 @@ import AddJobs from "./pages/AddJobs";
 import ManageJobs from "./pages/ManageJobs";
 import ViewApplications from "./pages/ViewApplications";
 import { AppContext } from "./context/AppContext";
-import TalentFinderDashboard from "./pages/TalentFinderDashboard";
-import TalentSeekerDashboard from "./pages/TalentSeekerDashboard";
-import ChatSystem from "./components/ChatSystem";
 
 const App = () => {
-  const { companyToken, userRole } = useContext(AppContext);
+  const { companyToken } = useContext(AppContext);
 
   return (
     <AppLayout>
@@ -36,18 +33,11 @@ const App = () => {
         <Route path="/candidate-signup" element={<CandidatesSignup />} />
         <Route path="/recruiter-login" element={<RecruiterLogin />} />
         <Route path="/recruiter-signup" element={<RecruiterSignup />} />]
-        
-        {/* Original recruiter dashboard */}
         <Route path="/dashboard" element={<Dashborad />}>
           <Route path="add-job" element={<AddJobs />} />
           <Route path="manage-jobs" element={<ManageJobs />} />
           <Route path="view-applications" element={<ViewApplications />} />
         </Route>
-        
-        {/* New role-based dashboards */}
-        <Route path="/talent-finder" element={<TalentFinderDashboard />} />
-        <Route path="/talent-seeker" element={<TalentSeekerDashboard />} />
-        <Route path="/messages" element={<ChatSystem />} />
       </Routes>
     </AppLayout>
   );
